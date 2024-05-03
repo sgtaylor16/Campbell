@@ -1,0 +1,78 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style>
+        html {
+          scroll-behavior: smooth;
+        }
+
+        table {
+          font-family: arial, sans-serif;
+          border-collapse: collapse;
+          scroll-behavior: smooth;
+        }
+        
+        td, th {
+          border: 1px solid #dddddd;
+          text-align: left;
+          padding: 8px;
+        }
+
+        .grid-container {
+          display: grid;
+          grid-template-columns: auto 700px;
+        }
+    </style>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+
+</head>
+<body>
+  <h1>Campbell Diagram</h1>
+  <div id='Campbell'></div>
+  
+</body>
+<script type="module">
+  import * as Plot from "https://cdn.jsdelivr.net/npm/@observablehq/plot@0.6/+esm";
+
+  //Speeds: Array of JSON objects of the form {label:string,rpm:float}. Each object will be plotted as a vertical line at a given operating
+  //speed.
+  const speeds = [{label:'PT 100%',rpm:1000},{label:"GT 100%",rpm:9000},]
+
+  //modes: Array of JSON objects of the form {label:string,hz:float}. Each object will be plotted as a horizontal line (no correction for
+  //speed stiffening or temperature)
+  const modes = [{label: 'Mode 1',hz:300},{label:'Mode 2/3', hz:400},{label:'mode 4', hz:500},{label:'Mode 5/6',hz:600},{label:'Mode 7/8',hz:700}]
+
+  //EOs: Engine orders to plot
+  const EOs = [1,2];
+
+  //maxspeed: maximum speed to plot on Campbell Diagram
+  const maxspeed = 54000;
+
+  function EO(order,maxspeed){
+    let lineob = [{rpm:0,hz:0}];
+    lineob.push({rpm:maxspeed,hz:order*maxspeed/60})
+    return lineob
+  }
+
+  console.log(EO(1,maxspeed))
+  const plot = Plot.plot({
+    x:{domain:[0,maxspeed]},
+    height:600,
+    width:800,
+    marks:[
+      Plot.ruleY([0]),
+      Plot.ruleX(speeds,{x:'rpm'}),
+      Plot.text(speeds,{text:'label',x:'rpm',y:100}),
+      Plot.ruleY(modes,{y:'hz'}),
+      Plot.text(modes,{text:'label',x:2000,y:'hz'}),
+      Plot.line(EO(1,maxspeed),{x:"rpm",y:"hz"}),
+      Plot.line(EO(2,maxspeed),{x:"rpm",y:"hz"})
+    ]
+  })
+  const div = document.querySelector("#Campbell")
+  div.append(plot)
+</script>
+</html>
+
