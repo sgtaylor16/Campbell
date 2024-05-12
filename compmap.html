@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compressor Map</title>
+</head>
+<body>
+    <h1>Compressor Map</h1>
+    <div id="map">
+
+    </div>
+    <script type="module">
+        import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+        import {CompMap} from "./plotmap.js"
+        let MyMap = new CompMap(800,600,"#map",[6,40],[1,20],"flow","PR")
+        MyMap.createplot()
+        async function inner(){
+            let alldata = await d3.json("SampleData/mapdata.json");
+            let speedlines = alldata['speedlines'];
+
+            MyMap.createline(speedlines.filter((d) => d.speed == 50),'black',"50%");
+            MyMap.createline(speedlines.filter((d) => d.speed == 60));
+            MyMap.createline(speedlines.filter((d) => d.speed == 70));
+            MyMap.createline(speedlines.filter((d) => d.speed == 75));
+            MyMap.createline(speedlines.filter((d) => d.speed == 80));
+            MyMap.createline(speedlines.filter((d) => d.speed == 85));
+            MyMap.createline(speedlines.filter((d) => d.speed == 90));
+            MyMap.createline(speedlines.filter((d) => d.speed == 95));
+            MyMap.createline(speedlines.filter((d) => d.speed == 100));
+            MyMap.createline(speedlines.filter((d) => d.speed == 110));
+        }
+
+        inner()
+
+            
+    </script>
+
+
+</body>
+</html>
