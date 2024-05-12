@@ -56,14 +56,14 @@ export function fanmap(data,divtag,speedarray,{
 }
 
 export class CompMap {
-    constructor(height,width,divtag,xdomain,ydomain,xkey,ykey){
-        this.height = height;
-        this.width = width;
-        this.divtag = divtag;
-        this.xdomain = xdomain;
-        this.ydomain = ydomain;
-        this.xkey = xkey;
-        this.ykey = ykey;
+    constructor(width,height,divtag,xdomain,ydomain,xkey,ykey){
+        this.height = height;  //Height of the figure in pixels
+        this.width = width; //Width of the figure in pixels
+        this.divtag = divtag; //Selector string for the div the svg will be placed in.
+        this.xdomain = xdomain; //Array of min and maximum for x axis
+        this.ydomain = ydomain; // Array of min and maximimum for y axis
+        this.xkey = xkey;  // Key in the object for x axis
+        this.ykey = ykey; //Key in the data object for the y axix
         this.margin = {left:40,right:40,top:40,bottom:40}
 
         this.xScale = d3.scaleLinear()
@@ -77,6 +77,7 @@ export class CompMap {
 
     }
     createplot(){
+        //Creates the figure in the plot
         let svg = d3.select(this.divtag)
                     .append("svg")
                     .attr("width",this.width)
@@ -91,16 +92,37 @@ export class CompMap {
             .call(d3.axisBottom(this.xScale))
     }
 
-    createline(plotarray,color="black"){
+    createline(plotarray,color="black",linelabel=null){
+        // https://observablehq.com/d/3dc322b2ee5c02fc
         let svg = d3.select(this.divtag).select("svg");
 
         let pathgenerator = d3.line()
                                 .x( d => this.xScale(d[this.xkey]))
                                 .y( d => this.yScale(d[this.ykey]));
 
-        svg.append("path")
+        const label = svg.append("text")
+                        .attr("display","none");
+
+        let line = svg.append("path")
             .attr("d",pathgenerator(plotarray))
             .attr("stroke",color)
             .attr("fill","none");
+
+        line.on("mouseover",function (e,d){
+            const [xm,ym] = d3.pointer(e);
+
+            label
+                .attr("display",null)
+                .attr("font-size",15)
+                .attr("font-weight","bold")
+                .style("opacity",1)
+                .attr("transform",`translate(${xm}, ${ym})`)
+                .attr("dx",9)
+                .attr("dy",-7)
+                .text(linelabel)
+        })
+        .on("mouseleave",function (e,d){
+            label.attr("display","none")
+        })
     }
 }
