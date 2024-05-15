@@ -1,8 +1,7 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 //Package to Plut Compressor / Fan Maps
 
-
-export class CompMap {
+class BasePlot {
     constructor(width,height,divtag,xdomain,ydomain,xkey,ykey){
         this.height = height;  //Height of the figure in pixels
         this.width = width; //Width of the figure in pixels
@@ -20,15 +19,15 @@ export class CompMap {
 
         this.yScale = d3.scaleLinear()
                         .domain(ydomain)
-                        .range([height - this.margin.top,this.margin.bottom])      
-
+                        .range([height - this.margin.top,this.margin.bottom])  
     }
+
     createplot(){
         //Creates the figure in the plot
         let svg = d3.select(this.divtag)
-                    .append("svg")
-                    .attr("width",this.width)
-                    .attr("height",this.height)
+        .append("svg")
+        .attr("width",this.width)
+        .attr("height",this.height)
 
         svg.append("g")
             .attr("transform",`translate(${this.margin.left},0)`)
@@ -38,6 +37,9 @@ export class CompMap {
             .attr("transform",`translate(0,${this.height - this.margin.bottom})`)
             .call(d3.axisBottom(this.xScale))
     }
+}
+
+export class CompMap extends BasePlot {
 
     createline(plotarray,color="black",linelabel=null){
         // https://observablehq.com/d/3dc322b2ee5c02fc
@@ -72,4 +74,18 @@ export class CompMap {
             label.attr("display","none")
         })
     }
+}
+
+export class Skyline extends BasePlot {
+
+    createline(plotarray,color="black"){
+
+        let svg = d3.select(this.divtag).select("svg")
+
+        let pathgenerator = d3.line()
+                                .x( d => this.xScale(d[this.xkey]))
+                                .y( d => this.yScale(d[this.ykey]))
+                                .curve(curveStepAfter)
+    }
+
 }
