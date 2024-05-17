@@ -8,11 +8,12 @@
 <body>
     <h1>Compressor Map</h1>
     <div id="map">
-
     </div>
+    <h1>Skyline</h1>
+    <div id="skyline"></div>
     <script type="module">
         import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
-        import {CompMap} from "./plotmap.js"
+        import {CompMap,Skyline} from "./plotmap.js"
         let MyMap = new CompMap(800,600,"#map",[6,40],[1,20],"flow","PR")
         MyMap.createplot()
         async function inner(){
@@ -29,6 +30,18 @@
             MyMap.createline(speedlines.filter((d) => d.speed == 95));
             MyMap.createline(speedlines.filter((d) => d.speed == 100));
             MyMap.createline(speedlines.filter((d) => d.speed == 110));
+
+        let MySky= new Skyline(800,600,"#skyline",[0,100],[0,100],"time",'Nc');
+        MySky.createplot()
+
+        let skydata = [
+            {"Nc":50,"time":10},
+            {"Nc":60,"time":20},
+            {"Nc":70,"time":30}
+        ];
+
+        MySky.createline(skydata)
+
         }
 
         inner()

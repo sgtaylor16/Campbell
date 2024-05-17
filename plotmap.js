@@ -85,7 +85,12 @@ export class Skyline extends BasePlot {
         let pathgenerator = d3.line()
                                 .x( d => this.xScale(d[this.xkey]))
                                 .y( d => this.yScale(d[this.ykey]))
-                                .curve(curveStepAfter)
+                                .curve(d3.curveStepAfter)
+
+        let line = svg.append("path")
+                        .attr("d",pathgenerator(plotarray))
+                        .attr("stroke",color)
+                        .attr("fill","none");
     }
 
 }
