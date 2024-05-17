@@ -106,14 +106,12 @@ export class Skyline extends BasePlot {
     createSpeedLine(x,y,npts,scale){
         const svg = d3.select(this.divtag).select("svg");
         const curveeq = (x) => Math.log(20*(x+1));
-        let curve = [{'x':0,'y':0},{'x':-.2,'y':curveeq(.2)},{'x':-1,'y':curveeq(1)}]
-
-        curve = curve.map(obj => {
-            let temp1 = scale *obj['x'] +x;
-            let temp2 = scale * obj['y'] + y;
-            return {"x":temp1,"y":temp2}
-        })
-        console.log(curve)
+        
+        const curvePts = [0,.2,1];
+        let curvePts2 = [];
+        for(let i=0;i<curvePts.length;i++){
+            curvePts2.push({x:scale * -curvePts[i] + x, y:scale * curveeq(curvePts[i])  + y})
+        }
 
         let pathgenerator = d3.line()
                     .x(d => this.xScale(d['x']))
@@ -121,7 +119,7 @@ export class Skyline extends BasePlot {
                     .curve(d3.curveBasis);
 
         let line = svg.append("path")
-                    .attr("d",pathgenerator(curve))
+                    .attr("d",pathgenerator(curvePts2))
                     .attr("stroke",'black')
                     .attr("fill","none");
 
