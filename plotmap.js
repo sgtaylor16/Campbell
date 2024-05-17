@@ -105,9 +105,9 @@ export class Skyline extends BasePlot {
 
     createSpeedLine(x,y,npts,scale){
         const svg = d3.select(this.divtag).select("svg");
-        const curveeq = (x) => Math.log(20*(x+1));
+        const curveeq = (x) => Math.log((20 * x+1));
         
-        const curvePts = [0,.2,1];
+        const curvePts = [0,.2,.4,.6,.8,1];
         let curvePts2 = [];
         for(let i=0;i<curvePts.length;i++){
             curvePts2.push({x:scale * -curvePts[i] + x, y:scale * curveeq(curvePts[i])  + y})
