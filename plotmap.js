@@ -76,7 +76,17 @@ export class CompMap extends BasePlot {
     }
 }
 
+function generatePoints(n) {
+    let points = [];
+    for(let i = 0; i < n; i++) {
+        points.push(i / (n - 1));
+    }
+    return points;
+}
+
 export class Skyline extends BasePlot {
+
+
 
     createline(plotarray,color="black"){
 
@@ -91,6 +101,47 @@ export class Skyline extends BasePlot {
                         .attr("d",pathgenerator(plotarray))
                         .attr("stroke",color)
                         .attr("fill","none");
+    }
+
+    createSpeedLine(x,y,npts,scale){
+        const svg = d3.select(this.divtag).select("svg");
+        const curveeq = (x) => Math.log(20*(x+1));
+        let curve = [{'x':0,'y':0},{'x':-.2,'y':curveeq(.2)},{'x':-1,'y':curveeq(1)}]
+
+        curve = curve.map(obj => {
+            let temp1 = scale *obj['x'] +x;
+            let temp2 = scale * obj['y'] + y;
+            return {"x":temp1,"y":temp2}
+        })
+        console.log(curve)
+
+        let pathgenerator = d3.line()
+                    .x(d => this.xScale(d['x']))
+                    .y(d => this.yScale(d['y']))
+                    .curve(d3.curveBasis);
+
+        let line = svg.append("path")
+                    .attr("d",pathgenerator(curve))
+                    .attr("stroke",'black')
+                    .attr("fill","none");
+
+        let ptArray = generatePoints(npts);
+
+        let ptObj = [];
+        for(let i=0;i < ptArray.length;i++){
+            ptObj.push({'x':scale * -ptArray[i] + x, 'y':(scale * curveeq(ptArray[i])) + y})
+        }
+        console.log(ptObj)
+        
+        let pts = svg.selectAll("circle")
+                    .data(ptObj)
+                    .join("circle")
+                    .attr("cx",d => this.xScale(d['x']))
+                    .attr("cy",d => this.yScale(d['y']))
+                    .attr("r",5)
+                    .attr("fill","none")
+                    .attr("stroke",'red')
+                    .attr("stroke-width",1.5)
     }
 
 }
