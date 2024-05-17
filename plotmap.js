@@ -90,7 +90,7 @@ export class Skyline extends BasePlot {
 
     createline(plotarray,color="black"){
 
-        let svg = d3.select(this.divtag).select("svg")
+        let svg = d3.select(this.divtag).select("svg");
 
         let pathgenerator = d3.line()
                                 .x( d => this.xScale(d[this.xkey]))
@@ -142,6 +142,19 @@ export class Skyline extends BasePlot {
                     .attr("fill","none")
                     .attr("stroke",'red')
                     .attr("stroke-width",1.5)
+                    .attr("class",'speed-lines')
+    }
+
+    addDot(ptarray,xkey,ykey){
+        const svg = d3.select(this.divtag).select("svg");
+
+        let pts = svg.selectAll("circle.pts")
+            .data(ptarray)
+            .join("circle")
+            .attr("cx",d => this.xScale(d[xkey]))
+            .attr("cy",d => this.yScale(d[ykey]))
+            .attr("r",5)
+            .attr("fill","grey")
     }
 
 }
