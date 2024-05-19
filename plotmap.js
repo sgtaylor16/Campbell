@@ -30,10 +30,12 @@ class BasePlot {
         .attr("height",this.height)
 
         svg.append("g")
+            .attr("id",'axisleft')
             .attr("transform",`translate(${this.margin.left},0)`)
             .call(d3.axisLeft(this.yScale))
 
         svg.append("g")
+            .attr('id','axisbottom')
             .attr("transform",`translate(0,${this.height - this.margin.bottom})`)
             .call(d3.axisBottom(this.xScale))
     }
@@ -91,6 +93,11 @@ function generatePoints(n) {
 
 export class Skyline extends BasePlot {
 
+    createplot(){
+        super.createplot()
+        let svg = d3.select(this.divtag)
+        let group = svg.select("#axisbottom").remove()
+    }
 
 
     createline(plotarray,color="black"){
