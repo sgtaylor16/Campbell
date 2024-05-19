@@ -111,8 +111,13 @@ export class Skyline extends BasePlot {
     createSpeedLine(x,y,npts,scale){
         const svg = d3.select(this.divtag).select("svg");
 
+        const divstring = `x-${x}y-${y}`
+
+        const newgroup = svg.append("g")
+            .attr("id",divstring)
+
         function speedcurve(t,xshift,yshift,scale){
-            return {"x":scale* (-t) + xshift,"y":-scale*8 *(t *Math.log(t+1) -t) + yshift}
+            return {"x":scale* (-t) + xshift,"y":-scale*8 *(t * Math.log(t+1) -t) + yshift}
         }
         
         const curvePts = [0,.2,.4,.6,.8,1];
@@ -121,26 +126,23 @@ export class Skyline extends BasePlot {
             curvePts2.push(speedcurve(curvePts[i],x,y,scale))
         }
 
-        console.log(curvePts2)
         let pathgenerator = d3.line()
                     .x(d => this.xScale(d['x']))
                     .y(d => this.yScale(d['y']))
                     .curve(d3.curveBasis);
 
-        let line = svg.append("path")
+        let line = newgroup.append("path")
                     .attr("d",pathgenerator(curvePts2))
                     .attr("stroke",'black')
                     .attr("fill","none");
 
         let ptArray = generatePoints(npts);
 
-        console.log(generatePoints(3))
-
         let ptObj = [];
         for(let i=0;i < ptArray.length;i++){
             ptObj.push(speedcurve(ptArray[i],x,y,scale))
         }
-        let pts = svg.selectAll("circle")
+        let pts = newgroup.selectAll("circle")
                     .data(ptObj)
                     .join("circle")
                     .attr("cx",d => this.xScale(d['x']))
