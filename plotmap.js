@@ -78,10 +78,15 @@ export class CompMap extends BasePlot {
 
 function generatePoints(n) {
     let points = [];
-    for(let i = 0; i < n; i++) {
-        points.push(i / (n - 1));
+    if(n==1){
+        return [0.5]
     }
-    return points;
+    else{
+        for(let i = 0; i < n; i++) {
+            points.push(i / (n - 1));
+        }
+        return points;
+    }
 }
 
 export class Skyline extends BasePlot {
@@ -127,9 +132,9 @@ export class Skyline extends BasePlot {
                     .attr("stroke",'black')
                     .attr("fill","none");
 
-        let ptArray = generatePoints(2);
+        let ptArray = generatePoints(npts);
 
-        console.log(generatePoints(1))
+        console.log(generatePoints(3))
 
         let ptObj = [];
         for(let i=0;i < ptArray.length;i++){
