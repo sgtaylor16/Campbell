@@ -30,16 +30,39 @@ class BasePlot {
         .attr("height",this.height)
 
         svg.append("g")
+            .attr("id",'axisleft')
             .attr("transform",`translate(${this.margin.left},0)`)
             .call(d3.axisLeft(this.yScale))
 
         svg.append("g")
+            .attr('id','axisbottom')
             .attr("transform",`translate(0,${this.height - this.margin.bottom})`)
             .call(d3.axisBottom(this.xScale))
     }
 }
 
 export class CompMap extends BasePlot {
+
+    createplot(){
+        super.createplot()
+
+        const svg = d3.select(this.divtag).select("svg");
+
+        console.log(this.width)
+
+        svg.selectAll("line.horizontalGrid").data(this.yScale.ticks()).enter()
+            .append("line")
+            .attr("class","horizongalGrid")
+            .attr("x1",this.margin.right)
+            .attr("x2",this.width)
+            .attr("y1", d => this.yScale(d))
+            .attr("y2", d => this.yScale(d))
+            .attr("fill","none")
+            .attr("shape-rendering","crispEdges")
+            .attr("stroke","lightgrey")
+            .attr("stroke-width","1px")
+
+    }
 
     createline(plotarray,color="black",linelabel=null){
         // https://observablehq.com/d/3dc322b2ee5c02fc
@@ -78,14 +101,24 @@ export class CompMap extends BasePlot {
 
 function generatePoints(n) {
     let points = [];
-    for(let i = 0; i < n; i++) {
-        points.push(i / (n - 1));
+    if(n==1){
+        return [0.5]
     }
-    return points;
+    else{
+        for(let i = 0; i < n; i++) {
+            points.push(i / (n - 1));
+        }
+        return points;
+    }
 }
 
 export class Skyline extends BasePlot {
 
+    createplot(){
+        super.createplot()
+        let svg = d3.select(this.divtag)
+        let group = svg.select("#axisbottom").remove()
+    }
 
 
     createline(plotarray,color="black"){
@@ -105,12 +138,20 @@ export class Skyline extends BasePlot {
 
     createSpeedLine(x,y,npts,scale){
         const svg = d3.select(this.divtag).select("svg");
-        const curveeq = (x) => Math.log((20 * x+1));
+
+        const divstring = `x-${x}y-${y}`
+
+        const newgroup = svg.append("g")
+            .attr("id",divstring)
+
+        function speedcurve(t,xshift,yshift,scale){
+            return {"x":scale* (-t) + xshift,"y":-scale*8 *(t * Math.log(t+1) -t) + yshift}
+        }
         
         const curvePts = [0,.2,.4,.6,.8,1];
         let curvePts2 = [];
         for(let i=0;i<curvePts.length;i++){
-            curvePts2.push({x:scale * -curvePts[i] + x, y:scale * curveeq(curvePts[i])  + y})
+            curvePts2.push(speedcurve(curvePts[i],x,y,scale))
         }
 
         let pathgenerator = d3.line()
@@ -118,7 +159,7 @@ export class Skyline extends BasePlot {
                     .y(d => this.yScale(d['y']))
                     .curve(d3.curveBasis);
 
-        let line = svg.append("path")
+        let line = newgroup.append("path")
                     .attr("d",pathgenerator(curvePts2))
                     .attr("stroke",'black')
                     .attr("fill","none");
@@ -127,11 +168,9 @@ export class Skyline extends BasePlot {
 
         let ptObj = [];
         for(let i=0;i < ptArray.length;i++){
-            ptObj.push({'x':scale * -ptArray[i] + x, 'y':(scale * curveeq(ptArray[i])) + y})
+            ptObj.push(speedcurve(ptArray[i],x,y,scale))
         }
-        console.log(ptObj)
-        
-        let pts = svg.selectAll("circle")
+        let pts = newgroup.selectAll("circle")
                     .data(ptObj)
                     .join("circle")
                     .attr("cx",d => this.xScale(d['x']))
