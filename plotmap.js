@@ -19,7 +19,7 @@ class BasePlot {
 
         this.yScale = d3.scaleLinear()
                         .domain(ydomain)
-                        .range([height - this.margin.top,this.margin.bottom])  
+                        .range([height - this.margin.bottom,this.margin.top])  
     }
 
     createplot(){
@@ -39,6 +39,7 @@ class BasePlot {
             .attr("transform",`translate(0,${this.height - this.margin.bottom})`)
             .call(d3.axisBottom(this.xScale))
     }
+
 }
 
 export class CompMap extends BasePlot {
@@ -66,7 +67,7 @@ export class CompMap extends BasePlot {
 
     createline(plotarray,{
         color= 'black',
-        linelabel=null
+        linehover=null
 
     }={}){
         // https://observablehq.com/d/3dc322b2ee5c02fc
@@ -84,7 +85,7 @@ export class CompMap extends BasePlot {
             .attr("stroke",color)
             .attr("fill","none");
 
-        if(linelabel != null){
+        if(linehover != null){
 
             line.on("mouseover",function (e,d){
                 const [xm,ym] = d3.pointer(e);
@@ -128,7 +129,9 @@ export class Skyline extends BasePlot {
     }
 
 
-    createline(plotarray,color="black"){
+    createline(plotarray,{
+        color="black"
+    }={}){
 
         let svg = d3.select(this.divtag).select("svg");
 
@@ -189,16 +192,19 @@ export class Skyline extends BasePlot {
                     .attr("class",'speed-lines')
     }
 
-    addDot(ptarray,xkey,ykey){
+    addDot(ptarray,{
+        color='grey',
+        radius= d=>5
+    }={}){
         const svg = d3.select(this.divtag).select("svg");
 
         let pts = svg.selectAll("circle.pts")
             .data(ptarray)
             .join("circle")
-            .attr("cx",d => this.xScale(d[xkey]))
-            .attr("cy",d => this.yScale(d[ykey]))
-            .attr("r",5)
-            .attr("fill","grey")
+            .attr("cx",d => this.xScale(d[this.xkey]))
+            .attr("cy",d => this.yScale(d[this.ykey]))
+            .attr("r",radius)
+            .attr("fill",color)
     }
 
 }
