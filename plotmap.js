@@ -98,7 +98,7 @@ export class CompMap extends BasePlot {
                     .attr("transform",`translate(${xm}, ${ym})`)
                     .attr("dx",9)
                     .attr("dy",-7)
-                    .text(linelabel)
+                    .text(linehover)
             })
             .on("mouseleave",function (e,d){
                 label.attr("display","none")
