@@ -64,7 +64,11 @@ export class CompMap extends BasePlot {
 
     }
 
-    createline(plotarray,color="black",linelabel=null){
+    createline(plotarray,{
+        color= 'black',
+        linelabel=null
+
+    }={}){
         // https://observablehq.com/d/3dc322b2ee5c02fc
         let svg = d3.select(this.divtag).select("svg");
 
@@ -80,22 +84,25 @@ export class CompMap extends BasePlot {
             .attr("stroke",color)
             .attr("fill","none");
 
-        line.on("mouseover",function (e,d){
-            const [xm,ym] = d3.pointer(e);
+        if(linelabel != null){
 
-            label
-                .attr("display",null)
-                .attr("font-size",15)
-                .attr("font-weight","bold")
-                .style("opacity",1)
-                .attr("transform",`translate(${xm}, ${ym})`)
-                .attr("dx",9)
-                .attr("dy",-7)
-                .text(linelabel)
-        })
-        .on("mouseleave",function (e,d){
-            label.attr("display","none")
-        })
+            line.on("mouseover",function (e,d){
+                const [xm,ym] = d3.pointer(e);
+
+                label
+                    .attr("display",null)
+                    .attr("font-size",15)
+                    .attr("font-weight","bold")
+                    .style("opacity",1)
+                    .attr("transform",`translate(${xm}, ${ym})`)
+                    .attr("dx",9)
+                    .attr("dy",-7)
+                    .text(linelabel)
+            })
+            .on("mouseleave",function (e,d){
+                label.attr("display","none")
+            })
+        }
     }
 }
 
