@@ -43,6 +43,27 @@ class BasePlot {
 
 export class CompMap extends BasePlot {
 
+    createplot(){
+        super.createplot()
+
+        const svg = d3.select(this.divtag).select("svg");
+
+        console.log(this.width)
+
+        svg.selectAll("line.horizontalGrid").data(this.yScale.ticks()).enter()
+            .append("line")
+            .attr("class","horizongalGrid")
+            .attr("x1",this.margin.right)
+            .attr("x2",this.width)
+            .attr("y1", d => this.yScale(d))
+            .attr("y2", d => this.yScale(d))
+            .attr("fill","none")
+            .attr("shape-rendering","crispEdges")
+            .attr("stroke","lightgrey")
+            .attr("stroke-width","1px")
+
+    }
+
     createline(plotarray,color="black",linelabel=null){
         // https://observablehq.com/d/3dc322b2ee5c02fc
         let svg = d3.select(this.divtag).select("svg");
