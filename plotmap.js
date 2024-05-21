@@ -40,6 +40,15 @@ class BasePlot {
             .call(d3.axisBottom(this.xScale))
     }
 
+    addtext(x,y,text){
+        let svg = d3.select(this.divtag).select("svg");
+        console.log(svg)
+        svg.append("text")
+            .attr('x',this.xScale(x))
+            .attr('y',this.yScale(y))
+            .attr('color','black')
+            .text(text)
+    }
 }
 
 export class CompMap extends BasePlot {
