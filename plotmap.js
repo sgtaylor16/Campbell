@@ -49,6 +49,24 @@ class BasePlot {
             .attr('color','black')
             .text(text)
     }
+
+    addDot(ptarray,{
+        color= d => 'grey',
+        radius= d=>5
+    }={}){
+        const svg = d3.select(this.divtag).select("svg");
+
+        ptarray.forEach( d =>{
+            console.log(d['time'])
+            let xpt = this.xScale(d[this.xkey]);
+            let ypt = this.yScale(d[this.ykey]);
+            svg.append("circle")
+            .attr("cx",xpt)
+            .attr('cy',ypt)
+            .attr('r',radius)
+            .attr('fill',color)
+        })
+    }
 }
 
 export class CompMap extends BasePlot {
@@ -201,19 +219,6 @@ export class Skyline extends BasePlot {
                     .attr("class",'speed-lines')
     }
 
-    addDot(ptarray,{
-        color='grey',
-        radius= d=>5
-    }={}){
-        const svg = d3.select(this.divtag).select("svg");
 
-        let pts = svg.selectAll("circle.pts")
-            .data(ptarray)
-            .join("circle")
-            .attr("cx",d => this.xScale(d[this.xkey]))
-            .attr("cy",d => this.yScale(d[this.ykey]))
-            .attr("r",radius)
-            .attr("fill",color)
-    }
 
 }

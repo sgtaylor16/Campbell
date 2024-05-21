@@ -20,7 +20,7 @@
             let alldata = await d3.json("SampleData/mapdata.json");
             let speedlines = alldata['speedlines'];
 
-            MyMap.createline(speedlines.filter((d) => d.speed == 50),'black',"50%");
+            MyMap.createline(speedlines.filter((d) => d.speed == 50),{linehover:"50%",color:'red'});
             MyMap.createline(speedlines.filter((d) => d.speed == 60));
             MyMap.createline(speedlines.filter((d) => d.speed == 70));
             MyMap.createline(speedlines.filter((d) => d.speed == 75));
@@ -30,6 +30,8 @@
             MyMap.createline(speedlines.filter((d) => d.speed == 95));
             MyMap.createline(speedlines.filter((d) => d.speed == 100));
             MyMap.createline(speedlines.filter((d) => d.speed == 110));
+
+            MyMap.addtext(12,2,'50%')
 
         let MySky= new Skyline(800,600,"#skyline",[0,100],[0,100],"time",'Nc');
         MySky.createplot()
@@ -44,7 +46,7 @@
         MySky.createSpeedLine(15,50,1,5)
         MySky.createSpeedLine(25,60,1,5)
 
-        MySky.addDot([{"time":17,"Nc":50}],'time','Nc')
+        MySky.addDot([{"time":17,"Nc":50}],{color:"red"})
 
         }
 
