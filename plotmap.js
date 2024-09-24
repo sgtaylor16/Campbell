@@ -94,8 +94,8 @@ export class CompMap extends BasePlot {
 
     createline(plotarray,{
         color= 'black',
-        linehover=null
-
+        linehover=null,
+        lineclass=null
     }={}){
         // https://observablehq.com/d/3dc322b2ee5c02fc
         let svg = d3.select(this.divtag).select("svg");
@@ -130,6 +130,10 @@ export class CompMap extends BasePlot {
             .on("mouseleave",function (e,d){
                 label.attr("display","none")
             })
+        }
+
+        if(lineclass != null){
+            line.attr("class",lineclass)
         }
     }
 }
