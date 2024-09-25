@@ -6,6 +6,10 @@
     <title>Compressor Map</title>
 </head>
 <body>
+    <h1>Check boxes</h1>
+    <form>
+        <input type="checkbox" id="flow" name="flow" value="flow">Case 1
+    </form>
     <h1>Compressor Map</h1>
     <div id="map">
     </div>
@@ -20,7 +24,7 @@
             let alldata = await d3.json("SampleData/mapdata.json");
             let speedlines = alldata['speedlines'];
 
-            MyMap.createline(speedlines.filter((d) => d.speed == 50),{linehover:"50%",color:'red'});
+            MyMap.createline(speedlines.filter((d) => d.speed == 50),{linehover:"50%",color:'red',lineclass:"line50"});
             MyMap.createline(speedlines.filter((d) => d.speed == 60));
             MyMap.createline(speedlines.filter((d) => d.speed == 70));
             MyMap.createline(speedlines.filter((d) => d.speed == 75));
@@ -52,6 +56,17 @@
 
             
         inner()
+
+        document.getElementById('flow').addEventListener('change',function(){
+            const line50 = document.getElementsByClassName('line50')
+            if(this.checked){
+                console.log('In Here')
+                line50[0].style.display='block'
+            }else{
+                console.log('in there')
+                line50[0].style.display='none'
+            }
+        })
     </script>
 
 
