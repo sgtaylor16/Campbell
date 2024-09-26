@@ -40,7 +40,7 @@ class BasePlot {
             .call(d3.axisBottom(this.xScale))
     }
 
-    addtext(x,y,text){
+    addtext(x,y,text,textclass=null){
         let svg = d3.select(this.divtag).select("svg");
         console.log(svg)
         svg.append("text")
@@ -48,6 +48,10 @@ class BasePlot {
             .attr('y',this.yScale(y))
             .attr('color','black')
             .text(text)
+
+        if(textclass != null){
+            svg.select("text").attr("class",textclass)
+        }
     }
 
     addDot(ptarray,{
@@ -159,7 +163,6 @@ export class Skyline extends BasePlot {
         let group = svg.select("#axisbottom").remove()
     }
 
-
     createline(plotarray,{
         color="black"
     }={}){
@@ -222,7 +225,5 @@ export class Skyline extends BasePlot {
                     .attr("stroke-width",1.5)
                     .attr("class",'speed-lines')
     }
-
-
 
 }
