@@ -40,18 +40,23 @@ class BasePlot {
             .call(d3.axisBottom(this.xScale))
     }
 
-    addtext(x,y,text,textclass=null){
+    addtext(x,y,text,{
+        textclass=null
+    } ={}){
         let svg = d3.select(this.divtag).select("svg");
-        console.log(svg)
+
         svg.append("text")
             .attr('x',this.xScale(x))
             .attr('y',this.yScale(y))
             .attr('color','black')
+            .attr('id','temp123')
             .text(text)
 
         if(textclass != null){
-            svg.select("text").attr("class",textclass)
+            d3.select("#temp123").attr("class",textclass)
         }
+
+        d3.select("#temp123").attr("id",null) 
     }
 
     addDot(ptarray,{
